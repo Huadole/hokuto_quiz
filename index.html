@@ -5,8 +5,7 @@
 <title>Test</title>
 <style>
   table, th, td {
-    border: 2px solid black;
-    border-collapse: collapse;
+    border: 0px solid black;
     border-collapse: separate;
     border-spacing: 7px;
   }
@@ -19,6 +18,10 @@
   .color-lump {
     width: 80px;
     height: 40px;
+  }
+  .img-row {
+    width: 300px;
+    height: 375px;
   }
   button {
     width: 80px;
@@ -34,12 +37,16 @@
 				<td><div id="result_ee">:)</div></td>
 				<td><div id="result_hua">:)</div></td>
 				<td><div><button id="restart" onclick="Init(1)">Restart</button></div></td>
-				<td><div><button id="score" onclick="Scoring()">Score</button></div></td>
 			</tr>
 			<tr>
-				<td><div><img id="img_1" width="300" height="375" onclick="Ranking(0)" /></div></td>
-				<td><div><img id="img_2" width="300" height="375" onclick="Ranking(1)" /></div></td>
-				<td><div><button id="update_result" onclick="SortRank()">Updated</button></div></td>
+				<td><div><img id="img_1" class="img-row" onclick="Ranking(0)" /></div></td>
+				<td><div><img id="img_2" class="img-row" onclick="Ranking(1)" /></div></td>
+				<td>
+				<div>
+					<button id="update_result" onclick="SortRank()">Updated</button><br>
+					<button id="score" onclick="Scoring()">Score</button>
+				</div>
+				</td>
 			</tr>
 			<tr>
 				<td colspan="2"><div id="txt3"></div></td>
@@ -168,6 +175,7 @@
 			{
 				for (cnt = 0; cnt < path_container.length ; cnt ++) testImg.pop();
 				setScore();
+				curr_level = 0;
 			}
 			
 			debug_ranking();
