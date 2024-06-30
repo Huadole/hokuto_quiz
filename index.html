@@ -37,8 +37,8 @@
 				<td><div><button id="score" onclick="Scoring()">Score</button></div></td>
 			</tr>
 			<tr>
-				<td><div><img id="img_1" onclick="Ranking(0)"></div></td>
-				<td><div><img id="img_2" onclick="Ranking(1)"></div></td>
+				<td><div><img id="img_1" onclick="Ranking(0)" /></div></td>
+				<td><div><img id="img_2" onclick="Ranking(1)" /></div></td>
 				<td><div><button id="update_result" onclick="SortRank()">Updated</button></div></td>
 			</tr>
 			<tr>
@@ -111,8 +111,8 @@
 			
 			for (cnt = 0; cnt < (type_name.length - 1) ; cnt ++)
 			{
-				path_container.push("./images/hokuto_5/"+type_name[cnt]+"前.jpg<br>");
-				path_container.push("./images/hokuto_5/"+type_name[cnt]+"後.jpg<br>");
+				path_container.push("./images/hokuto_5/"+type_name[cnt]+"前.jpg");
+				path_container.push("./images/hokuto_5/"+type_name[cnt]+"後.jpg");
 			}
 			path_container.push("./images/hokuto_5/"+type_name[cnt]+".jpg");
 		}
@@ -160,8 +160,8 @@
 			document.getElementById("img_2").src = path_container[index_mapping_table[ranking_cnt+1]];
 			document.getElementById("img_1").alt = path_container[index_mapping_table[ranking_cnt]];
 			document.getElementById("img_2").alt = path_container[index_mapping_table[ranking_cnt+1]];
-			document.getElementById("result_ee").innerHTML = path_container[index_mapping_table[0]];
-			document.getElementById("result_hua").innerHTML = path_container[index_mapping_table[1]];
+			//document.getElementById("result_ee").innerHTML = path_container[index_mapping_table[0]];
+			//document.getElementById("result_hua").innerHTML = path_container[index_mapping_table[1]];
 
 			// Initialization triggered by button
 			if (scenario != 0)
@@ -362,8 +362,8 @@
 				document.getElementById("img_2").src = path_container[index_mapping_table[ranking_cnt+1]];
 				document.getElementById("img_1").alt = path_container[index_mapping_table[ranking_cnt]];
 				document.getElementById("img_2").alt = path_container[index_mapping_table[ranking_cnt+1]];
-				document.getElementById("result_ee").innerHTML = path_container[index_mapping_table[ranking_cnt]];
-				document.getElementById("result_hua").innerHTML = path_container[index_mapping_table[ranking_cnt+1]];
+				//document.getElementById("result_ee").innerHTML = path_container[index_mapping_table[ranking_cnt]];
+				//document.getElementById("result_hua").innerHTML = path_container[index_mapping_table[ranking_cnt+1]];
 			}
 			
 			// Debug info
