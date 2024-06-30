@@ -106,8 +106,8 @@
 		function getImagePath() 
 		{
 			var type_name = new Array("Saga", "SS", "巧克力", "衣裝2", "衣裝", "低語", "決賽", 
-									  "初始M", "初始", "科學", "悟空", "消消樂", "追憶", "鬥牛", 
-									  "晚夏", "畢業", "街頭", "聖誕", "輝石", "羅密歐", "櫻花", "動畫");
+						  "初始M", "初始", "科學", "悟空", "消消樂", "追憶", "鬥牛", 
+						  "晚夏", "畢業", "街頭", "聖誕", "輝石", "羅密歐", "櫻花", "動畫");
 			
 			for (cnt = 0; cnt < (type_name.length - 1) ; cnt ++)
 			{
@@ -121,15 +121,15 @@
 		function setScore()
 		{
 			var EE_w_score = [1,2,3,4,5,6,7,8,9,10,
-							11,12,13,14,15,16,17,18,19,20,
-							21,22,23,24,25,26,27,28,29,30,
-							31,32,33,34,35,36,37,38,39,40,
-							41,42,43];
+					  11,12,13,14,15,16,17,18,19,20,
+					  21,22,23,24,25,26,27,28,29,30,
+					  31,32,33,34,35,36,37,38,39,40,
+					  41,42,43];
 			var Hua_w_score = [41,42,43,
-							31,32,33,34,35,36,37,38,39,40,
-							21,22,23,24,25,26,27,28,29,30,
-							11,12,13,14,15,16,17,18,19,20,
-							1,2,3,4,5,6,7,8,9,10];
+					   31,32,33,34,35,36,37,38,39,40,
+					   21,22,23,24,25,26,27,28,29,30,
+					   11,12,13,14,15,16,17,18,19,20,
+					   1,2,3,4,5,6,7,8,9,10];
 							
 			for (cnt = 0; cnt < path_container.length ; cnt ++)
 			{
@@ -158,8 +158,10 @@
 			RankingGroup = Math.floor(testImg.length/2);
 			document.getElementById("img_1").src = path_container[index_mapping_table[ranking_cnt]];
 			document.getElementById("img_2").src = path_container[index_mapping_table[ranking_cnt+1]];
-			//document.getElementById("txt1").innerHTML = path_container[index_mapping_table[0]];
-			//document.getElementById("txt2").innerHTML = path_container[index_mapping_table[1]];
+			document.getElementById("img_1").alt = path_container[index_mapping_table[ranking_cnt]];
+			document.getElementById("img_2").alt = path_container[index_mapping_table[ranking_cnt+1]];
+			document.getElementById("result_ee").innerHTML = path_container[index_mapping_table[0]];
+			document.getElementById("result_hua").innerHTML = path_container[index_mapping_table[1]];
 
 			// Initialization triggered by button
 			if (scenario != 0)
@@ -358,8 +360,10 @@
 				// Show next 2 images
 				document.getElementById("img_1").src = path_container[index_mapping_table[ranking_cnt]];
 				document.getElementById("img_2").src = path_container[index_mapping_table[ranking_cnt+1]];
-				//document.getElementById("txt1").innerHTML = path_container[index_mapping_table[ranking_cnt]];
-				//document.getElementById("txt2").innerHTML = path_container[index_mapping_table[ranking_cnt+1]];
+				document.getElementById("img_1").alt = path_container[index_mapping_table[ranking_cnt]];
+				document.getElementById("img_2").alt = path_container[index_mapping_table[ranking_cnt+1]];
+				document.getElementById("result_ee").innerHTML = path_container[index_mapping_table[ranking_cnt]];
+				document.getElementById("result_hua").innerHTML = path_container[index_mapping_table[ranking_cnt+1]];
 			}
 			
 			// Debug info
