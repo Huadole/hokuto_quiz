@@ -1,11 +1,373 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Hokuto Quiz</title>
-  </head>
-  <body>
-    <h1>Test</h1>
-    <img src="./images/hokuto_5/初始music北_花前.jpg" alt="初始M花前" />
-  </body>
+<html lang="zh-tw">
+<head>
+<meta charset="UTF-8">
+<title>Test</title>
+<style>
+  table, th, td {
+    border: 2px solid black;
+    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 7px;
+  }
+  th, td {
+    padding: 20px;
+    text-align: center;
+	height: 20px;
+	width: 35px;
+  }
+  .color-lump {
+    width: 80px;
+    height: 40px;
+  }
+  button {
+    width: 80px;
+    height: 40px;
+  }
+</style>
+</head>
+<body>
+	<center>
+		<div class="color-lump" id="lead"></div>
+		<table>
+			<tr>
+				<td><div id="result_ee">:)</div></td>
+				<td><div id="result_hua">:)</div></td>
+				<td><div><button id="restart" onclick="Init(1)">Restart</button></div></td>
+				<td><div><button id="score" onclick="Scoring()">Score</button></div></td>
+			</tr>
+			<tr>
+				<td><div><img id="img_1" onclick="Ranking(0)"></div></td>
+				<td><div><img id="img_2" onclick="Ranking(1)"></div></td>
+				<td><div><button id="update_result" onclick="SortRank()">Updated</button></div></td>
+			</tr>
+			<tr>
+				<td colspan="2"><div id="txt3"></div></td>
+				<td><div id="txt4"></div></td>
+			</tr>
+		</table>
+		<script>
+		
+		var testImg = [];
+		var path_container = [];
+		var index_mapping_table = [];
+		var rank_mapping_table = [];
+		var doneRank = 0;
+		var RankingGroup = 0;
+		var curr_ranking_num = 0;
+		var ranking_cnt = 0;
+		var curr_level = 0;
+		var user_score_ee = 0;
+		var user_score_hua = 0;
+		var debug_str = "", debug_str2 = "";
+		let cnt, count, random_idx=0;
+		const tier_max = 3;
+		const done_max = 3;
+			
+		function Img(ee_score, hua_score, path)
+		{
+			this.EE_score = ee_score;
+			this.Hua_score = hua_score;
+			this.img_path = path;
+			this.rank = 0;
+			this.tier = 0;
+			this.is_random = false;
+			this.is_ranking = false;
+			this.score = 0;
+		}
+		
+		function debug_ranking()
+		{
+			debug_str = "";
+			
+			debug_str += "RankingGroup = " + String(RankingGroup) + "<br>";
+			debug_str += "ranking_num  = " + String(curr_ranking_num) + "<br>";
+			debug_str += "ranking_cnt  = " + String(ranking_cnt) + "<br>";
+			debug_str += "doneRank     = " + String(doneRank) + "<br>";
+			debug_str += "curr_level   = " + String(curr_level) + "<br>";
+			debug_str += "item_num     = " + String(testImg.length) + "<br>";
+			for (cnt=0 ; cnt<testImg.length ; cnt ++)
+			{
+				debug_str += String(cnt) + "(m=" + String(index_mapping_table[cnt]) +"): " + testImg[cnt].score 
+						     + ", T" + String(testImg[cnt].tier) + ",R" + String(testImg[cnt].rank)
+ 							 + " (E=" + String(testImg[cnt].EE_score) + ", H=" + String(testImg[cnt].Hua_score) + ")<br>";
+			}
+			document.getElementById("txt3").innerHTML = debug_str;
+		}
+		
+		function debug_result()
+		{
+			debug_str2 = "";
+			for (cnt=0 ; cnt<testImg.length ; cnt ++) debug_str2 += "Rank" + String(cnt) + ": " + String(rank_mapping_table[cnt]) + "<br>";
+			document.getElementById("txt4").innerHTML = debug_str2;
+		}
+		
+		// Generate image path
+		function getImagePath() 
+		{
+			var type_name = new Array("Saga", "SS", "巧克力", "衣裝2", "衣裝", "低語", "決賽", 
+									  "初始M", "初始", "科學", "悟空", "消消樂", "追憶", "鬥牛", 
+									  "晚夏", "畢業", "街頭", "聖誕", "輝石", "羅密歐", "櫻花", "動畫");
+			
+			for (cnt = 0; cnt < (type_name.length - 1) ; cnt ++)
+			{
+				path_container.push("./images/hokuto_5/"+type_name[cnt]+"前.jpg<br>");
+				path_container.push("./images/hokuto_5/"+type_name[cnt]+"後.jpg<br>");
+			}
+			path_container.push("./images/hokuto_5/"+type_name[cnt]+".jpg");
+		}
+			
+		// Set information to each image
+		function setScore()
+		{
+			var EE_w_score = [1,2,3,4,5,6,7,8,9,10,
+							11,12,13,14,15,16,17,18,19,20,
+							21,22,23,24,25,26,27,28,29,30,
+							31,32,33,34,35,36,37,38,39,40,
+							41,42,43];
+			var Hua_w_score = [41,42,43,
+							31,32,33,34,35,36,37,38,39,40,
+							21,22,23,24,25,26,27,28,29,30,
+							11,12,13,14,15,16,17,18,19,20,
+							1,2,3,4,5,6,7,8,9,10];
+							
+			for (cnt = 0; cnt < path_container.length ; cnt ++)
+			{
+				testImg.push(new Img(EE_w_score[cnt], Hua_w_score[cnt], path_container[cnt]));
+			}
+		}
+		
+		function Init(scenario)
+		{	
+			// Random order of test images
+			for (cnt = 0; cnt < path_container.length ; cnt ++) testImg[cnt].is_random = false;
+			for (cnt = 0; cnt < path_container.length ; cnt ++)
+			{
+				random_idx = Math.floor(Math.random() * path_container.length);
+				if (testImg[random_idx].is_random == false)
+				{
+					index_mapping_table[cnt] = random_idx;
+					testImg[random_idx].is_random = true;
+				}
+				else cnt--;
+			}
+			
+			// Initial image setting
+			ranking_cnt = 0;
+			curr_ranking_num = testImg.length;
+			RankingGroup = Math.floor(testImg.length/2);
+			document.getElementById("img_1").src = path_container[index_mapping_table[ranking_cnt]];
+			document.getElementById("img_2").src = path_container[index_mapping_table[ranking_cnt+1]];
+			//document.getElementById("txt1").innerHTML = path_container[index_mapping_table[0]];
+			//document.getElementById("txt2").innerHTML = path_container[index_mapping_table[1]];
+
+			// Initialization triggered by button
+			if (scenario != 0)
+			{
+				for (cnt = 0; cnt < path_container.length ; cnt ++) testImg.pop();
+				setScore();
+			}
+			
+			debug_ranking();
+		}
+
+		function SortRank()
+		{
+			var temp_list = [];
+			var max = 0;
+			var tier_num, tier_cnt, counter;
+			
+			count = 0;
+			rank_mapping_table = [];
+			
+			// Sort according to Rank (increasing)
+			for (cnt = 0 ; cnt < testImg.length ; cnt ++)
+			{
+				// Reset is_ranking for sorting usage
+				testImg[cnt].is_ranking = false;
+				
+				// Store index in rank_mapping_table by rank
+				if (testImg[cnt].rank != 0)
+				{
+					rank_mapping_table[(testImg[cnt].rank-1)] = cnt;
+					testImg[cnt].is_ranking = true;
+					count++;
+				}
+			}
+			
+			// Sort according to Tier (decreasing)
+			for (tier_cnt = (tier_max-1) ; tier_cnt >= 0 ; tier_cnt --)
+			{
+				temp_list = [];
+				for (cnt = 0 ; cnt < testImg.length ; cnt ++)
+				{
+					if (testImg[cnt].tier == tier_cnt) temp_list.push(cnt);
+				}
+				
+				// Sort according to Score (decreasing)
+				tier_num = temp_list.length;
+				if (tier_num > 0)
+				{
+					for (cnt = 0 ; cnt < tier_num ; cnt++)
+					{
+						for (counter = 0, max = 0 ; counter < temp_list.length; counter ++)
+						{
+							if (testImg[temp_list[max]].score < testImg[temp_list[counter]].score) max = counter;
+						}
+						rank_mapping_table[count] = temp_list[max];
+						count++;
+						temp_list.splice(max,1);
+					}
+				}
+			}
+			debug_result();
+		}
+		
+		function Scoring()
+		{
+			// Calculate 2 kinds of score
+			for (cnt = 0, user_score_ee = 0, user_score_hua = 0 ; cnt < testImg.length ; cnt ++)
+			{
+				user_score_ee += (testImg[rank_mapping_table[cnt]].EE_score * (testImg.length-cnt));
+				user_score_hua += (testImg[rank_mapping_table[cnt]].Hua_score * (testImg.length-cnt));
+			}
+			document.getElementById("result_ee").innerHTML = "EE Score=" + String(user_score_ee) + " (" + ((user_score_ee/(user_score_ee+user_score_hua))*100).toFixed(2) + "%)<br>";
+			document.getElementById("result_hua").innerHTML = "Hua Score=" + String(user_score_hua) + " (" + ((user_score_hua/(user_score_ee+user_score_hua))*100).toFixed(2) + "%)<br>";
+		}
+		
+		getImagePath();
+		setScore();
+		Init(0);
+		
+		function Ranking(scenario)
+		{
+			function SetNextLevelRanking()
+			{
+				let temp_list = []; 
+				curr_level++;
+				
+				// Update index_mapping_table
+				for (cnt = 0, count = 0 ; cnt<index_mapping_table.length ; cnt ++)
+				{
+					if (testImg[index_mapping_table[cnt]].is_ranking == true)
+					{
+						temp_list.push(index_mapping_table[cnt]);
+						count++;
+					}
+				}
+				index_mapping_table = temp_list;
+				
+				// Reset is_ranking status in index_mapping_table
+				for (cnt = 0 ; cnt<testImg.length ; cnt ++) testImg[cnt].is_ranking = false;
+				
+				ranking_cnt = 0;
+				curr_ranking_num = count;
+				RankingGroup = Math.floor(count/2);
+			}
+			
+			function SetNextRoundRanking(last_idx)
+			{
+				for (cnt = 0 ; cnt < testImg.length ; cnt ++)
+				{
+					testImg[cnt].is_random = false;
+					testImg[cnt].is_ranking = false;
+				}
+				for (cnt = 0 ; cnt < (testImg.length - doneRank) ; cnt ++)
+				{
+					// Reset index_mapping_table without done Ranking image 
+					random_idx = Math.floor(Math.random() * path_container.length);
+					if((random_idx == last_idx) && (testImg[random_idx].is_random == false))
+					{
+						index_mapping_table[cnt] = random_idx;
+						testImg[random_idx].tier++;
+						testImg[random_idx].is_random = true;
+					}
+					else if (testImg[random_idx].rank != 0)
+					{
+						cnt--;
+					}
+					else if (testImg[random_idx].is_random == false)
+					{
+						index_mapping_table[cnt] = random_idx;
+						testImg[random_idx].is_random = true;
+					}
+					else cnt--;
+					
+					// Done ranking if tier become 3
+					if ((testImg[random_idx].tier == tier_max) && (testImg[random_idx].rank == 0))
+					{
+						doneRank++;
+						testImg[random_idx].rank = doneRank;
+						cnt--;
+					}
+				}
+			
+				ranking_cnt = 0;
+				curr_ranking_num = testImg.length-doneRank;
+				RankingGroup = Math.floor((testImg.length-doneRank)/2);
+			}
+			
+			// Ranking with score
+			var curr_index = testImg.length;
+			if (scenario == 0)
+			{
+				curr_index = index_mapping_table[ranking_cnt];
+				testImg[index_mapping_table[ranking_cnt]].score++;
+				testImg[index_mapping_table[ranking_cnt]].is_ranking = true;
+			}
+			else if (scenario == 1)
+			{
+				curr_index = index_mapping_table[ranking_cnt+1];
+				testImg[index_mapping_table[ranking_cnt+1]].score++;
+				testImg[index_mapping_table[ranking_cnt+1]].is_ranking = true;
+			}
+			else
+			{
+				// TBD: Error handling
+			}
+			
+			ranking_cnt+=2;
+			
+			// Handling single image left
+			if ((ranking_cnt+1) == curr_ranking_num)
+			{
+				testImg[index_mapping_table[ranking_cnt]].is_ranking = true;
+				ranking_cnt++;
+			}
+			debug_ranking();
+			
+			// NextRound or NextLevel
+			if (curr_ranking_num == 2) // Round ranking done (update tier for last choosed image)
+			{
+				curr_level++;
+				SetNextRoundRanking(curr_index);
+			}
+			else if (ranking_cnt == curr_ranking_num) // Level ranking done
+			{
+				SetNextLevelRanking();
+			}
+			
+			// Final Rank of user
+			if (doneRank == done_max)
+			{
+				SortRank();
+				Scoring();
+			}
+			else
+			{
+				// Show next 2 images
+				document.getElementById("img_1").src = path_container[index_mapping_table[ranking_cnt]];
+				document.getElementById("img_2").src = path_container[index_mapping_table[ranking_cnt+1]];
+				//document.getElementById("txt1").innerHTML = path_container[index_mapping_table[ranking_cnt]];
+				//document.getElementById("txt2").innerHTML = path_container[index_mapping_table[ranking_cnt+1]];
+			}
+			
+			// Debug info
+			debug_ranking();
+		}
+		
+		</script>
+
+	</center>
+</body>
 </html>
