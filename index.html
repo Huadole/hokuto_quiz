@@ -45,7 +45,7 @@
 				<div>
 					<button id="restart" onclick="Init(1)">Restart</button><br><br>
 					<button id="update_result" onclick="SortRank()">Updated</button><br>
-					<button id="score" onclick="Scoring()">Score</button>
+					<button id="score" onclick="Scoring(1)">Score</button>
 				</div>
 				</td>
 			</tr>
@@ -234,7 +234,7 @@
 			debug_result();
 		}
 		
-		function Scoring()
+		function Scoring(scenario)
 		{
 			let ee_d_score = 0, hua_d_score = 0;
 			for (cnt = 0, user_score_ee = 0, user_score_hua = 0 ; cnt < testImg.length ; cnt ++)
@@ -247,8 +247,17 @@
 				user_score_ee += (testImg[rank_mapping_table[cnt]].EE_score * (testImg.length-cnt));
 				user_score_hua += (testImg[rank_mapping_table[cnt]].Hua_score * (testImg.length-cnt));
 			}
-			document.getElementById("result_ee").innerHTML = "EE Score=" + String(user_score_ee) + " (" + ((user_score_ee/ee_d_score)*100).toFixed(2) + "%)<br>";
-			document.getElementById("result_hua").innerHTML = "Hua Score=" + String(user_score_hua) + " (" + ((user_score_hua/hua_d_score)*100).toFixed(2) + "%)<br>";
+
+			if((debug_en == true) || (scenario == 0))
+			{
+				document.getElementById("result_ee").innerHTML = "EE Score=" + String(user_score_ee) + " (" + ((user_score_ee/ee_d_score)*100).toFixed(2) + "%)<br>";
+				document.getElementById("result_hua").innerHTML = "Hua Score=" + String(user_score_hua) + " (" + ((user_score_hua/hua_d_score)*100).toFixed(2) + "%)<br>";
+			}
+			else
+			{
+				document.getElementById("result_ee").innerHTML = "";
+				document.getElementById("result_hua").innerHTML = "";	
+			}
 		}
 		
 		getImagePath();
@@ -367,7 +376,7 @@
 			if (doneRank == done_max)
 			{
 				SortRank();
-				Scoring();
+				Scoring(0);
 			}
 			else
 			{
