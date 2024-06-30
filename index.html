@@ -34,23 +34,24 @@
 		<div class="color-lump" id="lead"></div>
 		<table>
 			<tr>
-				<td><div id="result_ee">:)</div></td>
-				<td><div id="result_hua">:)</div></td>
-				<td><div><button id="restart" onclick="Init(1)">Restart</button></div></td>
+				<td><div id="result_ee"></div></td>
+				<td><div id="result_hua"></div></td>
+				<td><div>:)</div></td>
 			</tr>
 			<tr>
 				<td><div><img id="img_1" class="img-row" onclick="Ranking(0)" /></div></td>
 				<td><div><img id="img_2" class="img-row" onclick="Ranking(1)" /></div></td>
 				<td>
 				<div>
+					<button id="restart" onclick="Init(1)">Restart</button><br><br>
 					<button id="update_result" onclick="SortRank()">Updated</button><br>
 					<button id="score" onclick="Scoring()">Score</button>
 				</div>
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2"><div id="txt3"></div></td>
-				<td><div id="txt4"></div></td>
+				<td colspan="2"><div id="debug_info"></div></td>
+				<td><div id="debug_rank"></div></td>
 			</tr>
 		</table>
 		<script>
@@ -66,6 +67,7 @@
 		var curr_level = 0;
 		var user_score_ee = 0;
 		var user_score_hua = 0;
+		const debug_en = true;
 		var debug_str = "", debug_str2 = "";
 		let cnt, count, random_idx=0;
 		const tier_max = 3;
@@ -99,14 +101,17 @@
 						     + ", T" + String(testImg[cnt].tier) + ",R" + String(testImg[cnt].rank)
  							 + " (E=" + String(testImg[cnt].EE_score) + ", H=" + String(testImg[cnt].Hua_score) + ")<br>";
 			}
-			document.getElementById("txt3").innerHTML = debug_str;
+			
+			if (debug_en == true) document.getElementById("debug_info").innerHTML = debug_str;
+			else document.getElementById("txt3").innerHTML = "";
 		}
 		
 		function debug_result()
 		{
 			debug_str2 = "";
 			for (cnt=0 ; cnt<testImg.length ; cnt ++) debug_str2 += "Rank" + String(cnt) + ": " + String(rank_mapping_table[cnt]) + "<br>";
-			document.getElementById("txt4").innerHTML = debug_str2;
+			if (debug_en == true) document.getElementById("debug_rank").innerHTML = debug_str2;
+			else document.getElementById("debug_rank").innerHTML = "";
 		}
 		
 		// Generate image path
