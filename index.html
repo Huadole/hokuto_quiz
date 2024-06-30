@@ -92,6 +92,7 @@
 			else debug_en = false;
 			debug_ranking();
 			debug_result();
+			Scoring(1);
 		}
 			
 		function debug_ranking()
@@ -119,6 +120,7 @@
 		{
 			debug_str2 = "";
 			for (cnt=0 ; cnt<testImg.length ; cnt ++) debug_str2 += "Rank" + String(cnt) + ": " + String(rank_mapping_table[cnt]) + "<br>";
+			
 			if (debug_en == true) document.getElementById("debug_rank").innerHTML = debug_str2;
 			else document.getElementById("debug_rank").innerHTML = "";
 		}
