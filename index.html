@@ -263,8 +263,8 @@
 				hua_d_score = user_score_hua;
 				
 				// Calculate 2 kinds of score
-				user_score_ee -= (Math.abs(testImg[rank_mapping_table[cnt]].EE_rank - cnt) * (testImg.length - testImg[rank_mapping_table[cnt]].EE_rank));
-				user_score_hua -= (Math.abs(testImg[rank_mapping_table[cnt]].Hua_rank - cnt) * (testImg.length - testImg[rank_mapping_table[cnt]].Hua_rank));
+				user_score_ee -= (Math.abs(testImg[rank_mapping_table[cnt]].EE_rank - cnt) * (testImg.length + 1 - testImg[rank_mapping_table[cnt]].EE_rank));
+				user_score_hua -= (Math.abs(testImg[rank_mapping_table[cnt]].Hua_rank - cnt) * (testImg.length + 1 - testImg[rank_mapping_table[cnt]].Hua_rank));
 			}
 
 			if((debug_en == true) || (scenario == 0))
