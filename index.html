@@ -44,6 +44,7 @@
 				<td>
 				<div>
 					<button id="restart" onclick="Init(1)">Restart</button><br><br>
+					<button id="debug_switch" onclick="SwapDebugMode()"></button><br>
 					<button id="update_result" onclick="SortRank()">Updated</button><br>
 					<button id="score" onclick="Scoring(1)">Score</button>
 				</div>
@@ -67,7 +68,7 @@
 		var curr_level = 0;
 		var user_score_ee = 0;
 		var user_score_hua = 0;
-		const debug_en = false;
+		var debug_en = false;
 		var debug_str = "", debug_str2 = "";
 		let cnt, count, random_idx=0;
 		const tier_max = 3;
@@ -84,7 +85,13 @@
 			this.is_ranking = false;
 			this.score = 0;
 		}
-		
+
+		function SwapDebugMode()
+		{
+			if (debug_en == false) debug_en = true;
+			else debug_en = false;
+		}
+			
 		function debug_ranking()
 		{
 			debug_str = "";
