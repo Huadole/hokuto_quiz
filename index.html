@@ -259,9 +259,12 @@
 				// Default score of EE and Hua
 				user_score_ee += Math.pow(testImg[cnt].EE_rank, 2);
 				user_score_hua += Math.pow(testImg[cnt].Hua_rank, 2);
-				ee_d_score = user_score_ee;
-				hua_d_score = user_score_hua;
-				
+			}
+			
+			ee_d_score = user_score_ee;
+			hua_d_score = user_score_hua;
+			for (cnt = 0 ; cnt < testImg.length ; cnt ++)
+			{
 				// Calculate 2 kinds of score
 				user_score_ee -= (Math.abs(testImg[rank_mapping_table[cnt]].EE_rank - cnt) * (testImg.length + 1 - testImg[rank_mapping_table[cnt]].EE_rank));
 				user_score_hua -= (Math.abs(testImg[rank_mapping_table[cnt]].Hua_rank - cnt) * (testImg.length + 1 - testImg[rank_mapping_table[cnt]].Hua_rank));
